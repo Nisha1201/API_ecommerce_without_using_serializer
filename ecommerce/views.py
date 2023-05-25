@@ -7,10 +7,15 @@ from django.contrib.sites.shortcuts import get_current_site
 class CategoryListCreateAPIView(APIView):
     def get(self, request):
         categories = Category.objects.all()
-        data = [{'id': category.id, 'name': category.name} for category in categories]
+        # data = [{'id': category.id, 'name': category.name} for category in categories]
+        data=[]
+        for category in categories:
+            category_data={'id': category.id, 'name': category.name}
+            data.append(category_data)
         return Response(data)
 
     def post(self, request):
+        # print("lllllllllllllllllllllllllllllllllllllllllllllll")
         name = request.data.get('name')
         if name:
             category = Category.objects.create(name=name)
@@ -54,7 +59,11 @@ class CategoryRetrieveUpdateDestroyAPIView(APIView):
 class CustomerListCreateAPIView(APIView):
     def get(self, request):
         customers = Customer.objects.all()
-        data = [{'id': customer.id, 'first_name': customer.first_name, 'last_name': customer.last_name,'phone':customer.phone,'email':customer.email,'password':customer.password} for customer in customers]
+        # data = [{'id': customer.id, 'first_name': customer.first_name, 'last_name': customer.last_name,'phone':customer.phone,'email':customer.email,'password':customer.password} for customer in customers]
+        data=[]
+        for customer in customers:
+            customer_data={'id': customer.id, 'first_name': customer.first_name, 'last_name': customer.last_name,'phone':customer.phone,'email':customer.email,'password':customer.password}
+            data.append(customer_data)
         return Response(data)
 
     def post(self, request):
@@ -114,7 +123,11 @@ class ProductsListCreateAPIView(APIView):
     def get(self, request):
         products = Products.objects.all()
         current_site = get_current_site(request)
-        data = [{'id': product.id, 'name': product.name, 'price': product.price, 'category': product.category.name, 'description': product.description, 'image': f"{current_site.domain}{product.image.url}"} for product in products]
+        # data = [{'id': product.id, 'name': product.name, 'price': product.price, 'category': product.category.name, 'description': product.description, 'image': f"{current_site.domain}{product.image.url}"} for product in products]
+        data=[]
+        for product in products:
+            product_data={'id': product.id, 'name': product.name, 'price': product.price, 'category': product.category.name, 'description': product.description, 'image': f"{current_site.domain}{product.image.url}"}
+            data.append(product_data)
         return Response(data)
 
     def post(self, request):
@@ -177,7 +190,25 @@ class ProductsRetrieveUpdateDestroyAPIView(APIView):
 class OrderListCreateAPIView(APIView):
     def get(self, request):
         orders = Order.objects.all()
-        data = [{'id': order.id, 'product': order.product.name, 'customer': f"{order.customer.first_name} {order.customer.last_name}", 'quantity': order.quantity, 'price': order.price, 'address': order.address, 'phone': order.phone, 'date': order.date, 'status': order.status} for order in orders]
+        # data = [{'id': order.id, 'product': order.product.name, 'customer': f"{order.customer.first_name} {order.customer.last_name}", 'quantity': order.quantity, 'price': order.price, 'address': order.address, 'phone': order.phone, 'date': order.date, 'status': order.status} for order in orders]
+        data = []
+        for order in orders:
+        #   if order.id!=1:  #if we dont want data of id ==1 then
+            order_data = {
+                'id': order.id,
+                'product': order.product.name,
+                'customer': f"{order.customer.first_name} {order.customer.last_name}",
+                'quantity': order.quantity,
+                'price': order.price,
+                'address': order.address,
+                'phone': order.phone,
+                'date': order.date,
+                'status': order.status
+            }
+            
+            data.append(order_data)
+            print(data)
+
         return Response(data)
 
     def post(self, request):
